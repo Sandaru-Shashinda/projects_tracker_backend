@@ -1,7 +1,6 @@
 import bcrypt from "bcryptjs"
 import jwt from "jsonwebtoken"
-import * as authDb from './auth.db';
-import { IUserSchema } from './auth.types';
+import * as authDb from './auth.service.db';
 
 const JWT_SECRET = process.env.JWT_SECRET || 'dev_secret_key_change_in_prod';
 
