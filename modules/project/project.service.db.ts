@@ -36,6 +36,10 @@ export const deleteProject = async (id: string) => {
   return await Project.findByIdAndDelete(id)
 }
 
+export const pushMediaUrl = async (id: string, url: string) => {
+  return await Project.findByIdAndUpdate(id, { $push: { mediaUrls: url } }, { new: true });
+};
+
 export const getDashboardStats = async (ministryId?: string) => {
   const matchStage: ProjectFilter = {
     approvalStatus: APPROVAL_STATUS.APPROVED,

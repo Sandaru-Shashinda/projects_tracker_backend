@@ -62,6 +62,7 @@ export interface IProject extends Document {
   keyPeople: IKeyPerson[]
   schedule: ISchedule
   budget: IBudget
+  mediaUrls: string[]
   createdAt: Date
   updatedAt: Date
 }

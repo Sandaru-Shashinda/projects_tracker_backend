@@ -23,6 +23,9 @@ router.patch('/:id/approve', protect, authorize(ROLE.MINISTRY_APPROVER, ROLE.SUP
 router.patch('/:id/reject', protect, authorize(ROLE.MINISTRY_APPROVER, ROLE.SUPER_ADMIN), projectController.reject);
 
 
+// --- Media Attachment ---
+router.post('/:id/media', protect, authorize(ROLE.MINISTRY_OPERATOR, ROLE.SUPER_ADMIN), projectController.attachMedia);
+
 // --- Super Admin Routes ---
 router.delete('/:id', protect, authorize(ROLE.SUPER_ADMIN), projectController.remove);
 

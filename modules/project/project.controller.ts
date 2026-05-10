@@ -16,7 +16,7 @@ const handleZodError = (res: Response, error: ZodError) =>
 export const create = async (req: AuthRequest, res: Response) => {
   try {
     const validatedData = createProjectSchema.parse(req.body)
-    const project = await projectService.createProject(validatedData, req.user)
+    const project = await projectService.createProject(validatedData, req.user, req.ip)
     res.status(201).json(project)
   } catch (error: any) {
     if (error instanceof ZodError) return handleZodError(res, error)
@@ -50,7 +50,7 @@ export const update = async (req: AuthRequest, res: Response) => {
   try {
     const { id } = projectIdSchema.parse(req.params)
     const validatedData = updateProjectSchema.parse(req.body)
-    const updatedProject = await projectService.updateProject(id, validatedData, req.user)
+    const updatedProject = await projectService.updateProject(id, validatedData, req.user, req.ip)
     res.json(updatedProject)
   } catch (error: any) {
     if (error instanceof ZodError) return handleZodError(res, error)
@@ -61,7 +61,7 @@ export const update = async (req: AuthRequest, res: Response) => {
 export const remove = async (req: AuthRequest, res: Response) => {
   try {
     const { id } = projectIdSchema.parse(req.params)
-    await projectService.deleteProject(id)
+    await projectService.deleteProject(id, req.user, req.ip)
     res.json({ message: "Project deleted successfully" })
   } catch (error: any) {
     if (error instanceof ZodError) return handleZodError(res, error)
@@ -72,7 +72,7 @@ export const remove = async (req: AuthRequest, res: Response) => {
 export const submit = async (req: AuthRequest, res: Response) => {
   try {
     const { id } = projectIdSchema.parse(req.params)
-    const project = await projectService.submitProjectForApproval(id, req.user)
+    const project = await projectService.submitProjectForApproval(id, req.user, req.ip)
     res.json({ message: "Project submitted for approval", project })
   } catch (error: any) {
     if (error instanceof ZodError) return handleZodError(res, error)
@@ -83,7 +83,7 @@ export const submit = async (req: AuthRequest, res: Response) => {
 export const approve = async (req: AuthRequest, res: Response) => {
   try {
     const { id } = projectIdSchema.parse(req.params)
-    const project = await projectService.approveProject(id, req.user)
+    const project = await projectService.approveProject(id, req.user, req.ip)
     res.json({ message: "Project approved successfully", project })
   } catch (error: any) {
     if (error instanceof ZodError) return handleZodError(res, error)
@@ -94,11 +94,26 @@ export const approve = async (req: AuthRequest, res: Response) => {
 export const reject = async (req: AuthRequest, res: Response) => {
   try {
     const { id } = projectIdSchema.parse(req.params)
-    const project = await projectService.rejectProject(id, req.user)
+    const project = await projectService.rejectProject(id, req.user, req.ip)
     res.json({ message: "Project rejected", project })
   } catch (error: any) {
     if (error instanceof ZodError) return handleZodError(res, error)
     res.status(403).json({ message: error.message })
+  }
+}
+
+export const attachMedia = async (req: AuthRequest, res: Response) => {
+  try {
+    const { id } = projectIdSchema.parse(req.params)
+    const { url } = req.body
+    if (!url || typeof url !== 'string') {
+      return res.status(400).json({ message: 'A valid url string is required in the request body' })
+    }
+    const project = await projectService.attachMediaToProject(id, url, req.user, req.ip)
+    res.json(project)
+  } catch (error: any) {
+    if (error instanceof ZodError) return handleZodError(res, error)
+    res.status(400).json({ message: error.message })
   }
 }
 

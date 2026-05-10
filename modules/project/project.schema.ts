@@ -65,7 +65,9 @@ const ProjectSchema = new Schema<IProject>({
     currency: { type: String, default: 'LKR' },
     allocated: { type: Number, default: 0 },
     spent: { type: Number, default: 0 }
-  }
+  },
+
+  mediaUrls: [{ type: String }]
 }, { timestamps: true });
 
 export const Project = mongoose.model<IProject>('Project', ProjectSchema);

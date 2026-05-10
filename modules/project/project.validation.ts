@@ -61,6 +61,7 @@ export const createProjectSchema = z.object({
     allocated: z.number().min(0),
     spent: z.number().min(0).default(0),
   }).optional(),
+  mediaUrls: z.array(z.string().url()).optional(),
 }).refine(data => {
     if (data.status === PROJECT_STATUS.DELAYED) {
         return typeof data.schedule.delayReason === 'string' && data.schedule.delayReason.length > 10;
